@@ -16,7 +16,8 @@ export function SettingsScreen() {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       }}
-      provider={PROVIDER_GOOGLE}>
+      provider={PROVIDER_GOOGLE}
+      >
       <MapViewDirections
         origin={origin}
         destination={destination}
