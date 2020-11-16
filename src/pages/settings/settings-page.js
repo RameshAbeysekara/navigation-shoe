@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {Text, View, Image, ScrollView} from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
-import {MapView, PROVIDER_GOOGLE} from 'react-native-maps-directions';
+import MapView from 'react-native-maps';
+import {PROVIDER_GOOGLE} from 'react-native-maps-directions';
 
 export function SettingsScreen() {
   let GOOGLE_MAPS_APIKEY = 'AIzaSyDYNU9mpalnAUDdGMlml3E7ZUwNCxQPrjM';
@@ -14,8 +15,8 @@ export function SettingsScreen() {
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-      }}>
-      provider={PROVIDER_GOOGLE}
+      }}
+      provider={PROVIDER_GOOGLE}>
       <MapViewDirections
         origin={origin}
         destination={destination}
