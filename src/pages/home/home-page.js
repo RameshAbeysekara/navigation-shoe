@@ -4,12 +4,24 @@ import {TextInput} from 'react-native';
 import {Button} from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from '@react-navigation/native';
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import { getGeoLocation, getManeuvers, listenToLocationChange } from '../../../locationService';
+import GlobalContext from '../../context/global-context';
 
 export function HomeScreen( {Map}) {
-  const [destination, setDestination] = useState();
   const navigation = useNavigation();
+  const globalContext = useContext(GlobalContext)
+
+  const TestLocations = () => {
+    if (globalContext) {
+      return (
+        <>
+        <Text>Origin: {globalContext.getOrigin() ? globalContext.getOrigin().name : 'loading'}</Text>
+        <Text>Destination: {globalContext.getDestination() ? globalContext.getDestination().name: 'loading'}</Text>
+        </>
+      )
+    }
+  }
   
   //=====need to enter user entered destination value ==================================================================================================
   let geoPoint = getGeoLocation('sri Lnka');
@@ -19,7 +31,7 @@ export function HomeScreen( {Map}) {
   
 // updating d=current locations
   listenToLocationChange((data) => {
-    setLocation(data)
+    // setLocation(data)
   })
 
   return (
@@ -38,6 +50,7 @@ export function HomeScreen( {Map}) {
             height: 40,
           }}
           placeholder="My current Location"
+          onChangeText={(Val) => globalContext.setOrigin(Val)}
         />
       </View>
 
@@ -55,11 +68,8 @@ export function HomeScreen( {Map}) {
             height: 40,
           }}
           placeholder="Destination"
-          onChangeText={(Val) => setDestination(Val) }
+          onChangeText={(Val) => globalContext.setDestination(Val) }
         />
-    {/* =============testing purpose============================ */}
-        <Text>destination:{destination}</Text>
-        {/* ==================================================== */}
       </View>
 
       <View style={{width: 200}}>
@@ -75,6 +85,7 @@ export function HomeScreen( {Map}) {
         onPress={() => navigation.navigate('Map')}
       />
       </View>
+      <TestLocations></TestLocations>
     </View>
   );
 
