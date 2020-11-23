@@ -54,11 +54,14 @@ export function SettingsScreen() {
   let [currentLongitude, setCurrentLongitude] = useState('...');
   let [currentLatitude, setCurrentLatitude] = useState('...');
 
+
+  // getting my current location
   const locateCurrentPosition = () => {
     Geolocation.getCurrentPosition(
       (position) => {
         console.log(JSON.stringify(position));
 
+        //need to get lat , long of my current location for the initialregion (line 93) below
         let currentLongitude = JSON.stringify(position.coords.longitude);
         let currentLatitude = JSON.stringify(position.coords.latitude);
       //Setting Longitude state
@@ -88,6 +91,7 @@ export function SettingsScreen() {
       showsUserLocation={true}
       loadingEnabled={true}
       initialRegion={{
+        //should enter the current location latitude and current location longitude
         latitude: 6.987444,
         longitude: 80.058133,
         latitudeDelta: 0.07,

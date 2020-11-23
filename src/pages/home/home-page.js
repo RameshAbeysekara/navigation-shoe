@@ -4,11 +4,24 @@ import {TextInput} from 'react-native';
 import {Button} from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from '@react-navigation/native';
-
+import {useState} from 'react';
+import { getGeoLocation, getManeuvers, listenToLocationChange } from '../../../locationService';
 
 export function HomeScreen( {Map}) {
-
+  const [destination, setDestination] = useState();
   const navigation = useNavigation();
+  
+  //=====need to enter user entered destination value ==================================================================================================
+  let geoPoint = getGeoLocation('sri Lnka');
+
+   //====={ orgin (my current location )}========{destination }=======================
+  let manuevers = getManeuvers({ lat: 37.7699298, lng: -122.4469157 }, { lat: 37.7683909618184, lng: -122.51089453697205 });
+  
+// updating d=current locations
+  listenToLocationChange((data) => {
+    setLocation(data)
+  })
+
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View
@@ -24,7 +37,7 @@ export function HomeScreen( {Map}) {
           style={{
             height: 40,
           }}
-          placeholder="Start"
+          placeholder="My current Location"
         />
       </View>
 
@@ -42,7 +55,11 @@ export function HomeScreen( {Map}) {
             height: 40,
           }}
           placeholder="Destination"
+          onChangeText={(Val) => setDestination(Val) }
         />
+    {/* =============testing purpose============================ */}
+        <Text>destination:{destination}</Text>
+        {/* ==================================================== */}
       </View>
 
       <View style={{width: 200}}>
