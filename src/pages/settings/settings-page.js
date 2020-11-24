@@ -24,11 +24,13 @@ export function SettingsScreen() {
   // let origin = {latitude: 6.9769, longitude: 80.052843};
 
   //===============================================================================================================================
- //===============================================================================================================================
+ //  need to enter users current lat n long 
+ // this origin will assign to  line 111 below
   let origin = {latitude:6.987444, longitude: 80.058133}; 
-  // cant assign current location as origin and intialRegion. error came. therefore entered my current location as lat n long. 
-  // should vary with the location 
+  
   //===============================================================================================================================
+  //  need to user enterd destination lat n long
+ // this origin will assign to  line 112 below
   let destination = {latitude: 6.970989, longitude: 80.056788};
 
   // SJP to ACME Lat Long
@@ -91,7 +93,9 @@ export function SettingsScreen() {
       showsUserLocation={true}
       loadingEnabled={true}
       initialRegion={{
+        //==============================================================================
         //should enter the current location latitude and current location longitude
+        //==============================================
         latitude: 6.987444,
         longitude: 80.058133,
         latitudeDelta: 0.07,
