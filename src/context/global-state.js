@@ -16,6 +16,16 @@ export default GlobalState = ({children}) => {
     setLocations(locationsTemp);
   };
 
+  const setOriginByCoordinates = (position) => {
+    let locationsTemp = {...locations}
+    locationsTemp.origin = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+      name: "Dummy Name", // call gmaps and retried a name
+    }
+    setLocations(locationsTemp);
+  }
+
   const setDestination = (destinationName) => {
     let locationsTemp = {...locations}
     locationsTemp.destination = {
@@ -42,6 +52,7 @@ export default GlobalState = ({children}) => {
         getOrigin,
         setDestination,
         getDestination,
+        setOriginByCoordinates,
       }}>
       {children}
     </LocationContext.Provider>
