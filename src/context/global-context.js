@@ -14,6 +14,7 @@ export default GlobalContext = React.createContext({
     },
     setOrigin: () => {},
     getOrigin: () => {},
+    setOriginByCoordinates: () => {},
     setDestination: () => {},
     getDestination: () => {},
 });
