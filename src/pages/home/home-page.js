@@ -4,19 +4,26 @@ import {TextInput} from 'react-native';
 import {Button} from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from '@react-navigation/native';
-import {useState, useContext} from 'react';
+import {useState, useContext,useEffect} from 'react';
 import { getGeoLocation, getManeuvers, listenToLocationChange } from '../../../locationService';
 import GlobalContext from '../../context/global-context';
-
+import Geolocation from '@react-native-community/geolocation';
+import {request, PERMISSIONS} from 'react-native-permissions';
 export function HomeScreen( {Map}) {
   const navigation = useNavigation();
   const globalContext = useContext(GlobalContext)
+
+  useEffect(() => {
+   Geolocation.getCurrentPosition();
+   requestLocationPermission();
+  }, []);
+
 
   const TestLocations = () => {
     if (globalContext) {
       return (
         <>
-        <Text>Origin: {globalContext.getOrigin() ? globalContext.getOrigin().name : 'loading'}</Text>
+        <Text>Origin: {globalContext.getOriginByCoords() ? globalContext.getOriginByCoord().name : 'loading'}</Text>
         <Text>Destination: {globalContext.getDestination() ? globalContext.getDestination().name: 'loading'}</Text>
         </>
       )
@@ -50,7 +57,7 @@ export function HomeScreen( {Map}) {
             height: 40,
           }}
           placeholder="My current Location"
-          onChangeText={(Val) => globalContext.setOrigin(Val)}
+          onChangeText={(Val) => globalContext.setOriginByCoord(Val)}
         />
       </View>
 

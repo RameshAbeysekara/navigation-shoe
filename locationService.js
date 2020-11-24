@@ -1,4 +1,7 @@
 import Geolocation from 'react-native-geolocation-service';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import {PROVIDER_GOOGLE} from 'react-native-maps-directions';
+
 
 //change api key to yours 
 //enable deirection and geocode api's on Google cloude platform
@@ -56,3 +59,40 @@ exports.listenToLocationChange = (callback) => {
         distanceFilter: 3,
     })
 }
+
+
+
+const requestLocationPermission = async () => {
+    if (Platform.OS === 'android') {
+      const response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      console.log('android: ' + response);
+      if (response === 'granted') {
+        locateCurrentPosition();
+      }
+    } else {
+    }
+  };
+
+  const locateCurrentPosition = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        console.log(JSON.stringify(position));
+
+        //need to get lat , long of my current location for the initialregion (line 93) below
+        let currentLongitude =position.coords.longitude;
+        let currentLatitude = position.coords.latitude;
+      //Setting Longitude state
+      setCurrentLongitude(currentLongitude);
+        
+      //Setting Longitude state
+      setCurrentLatitude(currentLatitude);
+  
+      },
+      (error) => alert(error.message),
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 1000,
+      },
+    );
+  };

@@ -5,12 +5,12 @@ import LocationContext from './global-context';
 export default GlobalState = ({children}) => {
   const [locations, setLocations] = useState({
   });
-  
-  const setOrigin = (originName) => {
+
+  const setOriginByCoords = (lng, lat, originName) => {
     let locationsTemp = {...locations}
     locationsTemp.origin = {
-      lat: 23, // this is a placeholder. use google api to retrive matching lats and lngs and set these
-      lng: 233,
+      lat,
+      lng,
       name: originName,
     }
     setLocations(locationsTemp);
@@ -26,7 +26,8 @@ export default GlobalState = ({children}) => {
     setLocations(locationsTemp);
   };
 
-  const getOrigin = () => {
+
+  const getOriginByCoords = () => {
     return (locations.origin);
   }
 
@@ -34,12 +35,13 @@ export default GlobalState = ({children}) => {
     return (locations.destination);
   }
 
+
   return (
     <LocationContext.Provider
       value={{
         locations,
-        setOrigin,
-        getOrigin,
+        setOriginByCoords,
+        getOriginByCoords,
         setDestination,
         getDestination,
       }}>

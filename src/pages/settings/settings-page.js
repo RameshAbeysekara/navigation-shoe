@@ -19,66 +19,54 @@ navigator.geolocation = require('@react-native-community/geolocation');
 
 export function SettingsScreen() {
   let GOOGLE_MAPS_APIKEY = 'AIzaSyDYNU9mpalnAUDdGMlml3E7ZUwNCxQPrjM';
-
-  //orginal
-  // let origin = {latitude: 6.9769, longitude: 80.052843};
-
-  //===============================================================================================================================
- //===============================================================================================================================
+  
   let origin = {latitude:6.987444, longitude: 80.058133}; 
-  // cant assign current location as origin and intialRegion. error came. therefore entered my current location as lat n long. 
-  // should vary with the location 
-  //===============================================================================================================================
   let destination = {latitude: 6.970989, longitude: 80.056788};
 
-  // SJP to ACME Lat Long
-  // let origin = {latitude: 6.8540, longitude: 79.9057};
-  // let destination = {latitude:6.8608, longitude: 79.8988};
-
-  useEffect(() => {
-    requestLocationPermission();
-  }, []);
 
 
-  const requestLocationPermission = async () => {
-    if (Platform.OS === 'android') {
-      const response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      console.log('android: ' + response);
-      if (response === 'granted') {
-        locateCurrentPosition();
-      }
-    } else {
-    }
-  };
 
-  let [currentLongitude, setCurrentLongitude] = useState('...');
-  let [currentLatitude, setCurrentLatitude] = useState('...');
+  // const requestLocationPermission = async () => {
+  //   if (Platform.OS === 'android') {
+  //     const response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+  //     console.log('android: ' + response);
+  //     if (response === 'granted') {
+  //       locateCurrentPosition();
+  //     }
+  //   } else {
+  //   }
+  // };
 
+  // let [currentLongitude, setCurrentLongitude] = useState(0.0);
+  // let [currentLatitude, setCurrentLatitude] = useState(0.0);
+
+// get it to service 
 
   // getting my current location
-  const locateCurrentPosition = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        console.log(JSON.stringify(position));
+  // const locateCurrentPosition = () => {
+  //   Geolocation.getCurrentPosition(
+  //     (position) => {
+  //       console.log(JSON.stringify(position));
 
-        //need to get lat , long of my current location for the initialregion (line 93) below
-        let currentLongitude = JSON.stringify(position.coords.longitude);
-        let currentLatitude = JSON.stringify(position.coords.latitude);
-      //Setting Longitude state
-      setCurrentLongitude(currentLongitude);
+  //       //need to get lat , long of my current location for the initialregion (line 93) below
+  //       let currentLongitude =position.coords.longitude;
+  //       let currentLatitude = position.coords.latitude;
+  //     //Setting Longitude state
+  //     setCurrentLongitude(currentLongitude);
         
-      //Setting Longitude state
-      setCurrentLatitude(currentLatitude);
+  //     //Setting Longitude state
+  //     setCurrentLatitude(currentLatitude);
   
-      },
-      (error) => alert(error.message),
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000,
-      },
-    );
-  };
+  //     },
+  //     (error) => alert(error.message),
+  //     {
+  //       enableHighAccuracy: true,
+  //       timeout: 20000,
+  //       maximumAge: 1000,
+  //     },
+  //   );
+  // };
+
 
   return (
     <MapView
