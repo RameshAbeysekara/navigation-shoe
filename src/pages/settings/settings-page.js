@@ -9,36 +9,30 @@ import {
   AppRegistry,
 } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import {PROVIDER_GOOGLE} from 'react-native-maps-directions';
-import {request, PERMISSIONS} from 'react-native-permissions';
-import {useEffect,useState} from 'react';
-
+import { PROVIDER_GOOGLE } from 'react-native-maps-directions';
+import { request, PERMISSIONS } from 'react-native-permissions';
+import { useEffect, useState, useContext, } from 'react';
+import GlobalContext from '../../context/global-context';
 navigator.geolocation = require('@react-native-community/geolocation');
+import { getGeoLocation, getManeuvers, listenToLocationChange } from '../../../locationService';
+import {
+  requestLocationPermission,
+  getCurrentPosition,
+} from '../../services/gmaps.service';
+
 
 export function SettingsScreen() {
+  const [didMount, setDidMount] = useState(false);
+
+
   let GOOGLE_MAPS_APIKEY = 'AIzaSyDYNU9mpalnAUDdGMlml3E7ZUwNCxQPrjM';
-
-  //orginal
-  // let origin = {latitude: 6.9769, longitude: 80.052843};
-
-  //===============================================================================================================================
- //  need to enter users current lat n long 
- // this origin will assign to  line 111 below
-  let origin = {latitude:6.987444, longitude: 80.058133}; 
-  
-  //===============================================================================================================================
-  //  need to user enterd destination lat n long
- // this origin will assign to  line 112 below
-  let destination = {latitude: 6.970989, longitude: 80.056788};
-
-  // SJP to ACME Lat Long
-  // let origin = {latitude: 6.8540, longitude: 79.9057};
-  // let destination = {latitude:6.8608, longitude: 79.8988};
-
+  const globalContext = useContext(GlobalContext);
   useEffect(() => {
     requestLocationPermission();
+    setDidMount(true);
+    return () => setDidMount(false);
   }, []);
 
 
@@ -47,73 +41,66 @@ export function SettingsScreen() {
       const response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
       console.log('android: ' + response);
       if (response === 'granted') {
-        locateCurrentPosition();
+        // getCurrentPosition((position) => {
+        //   globalContext.setOriginByCoordinates(position)
+        // })
+        listenToLocationChange((position) => {
+          console.log("position " + JSON.stringify(position))
+          globalContext.setOriginByCoordinates(position);
+        })
       }
     } else {
     }
   };
 
-  let [currentLongitude, setCurrentLongitude] = useState('...');
-  let [currentLatitude, setCurrentLatitude] = useState('...');
+
+  if (globalContext) {
+    var destCoods = globalContext.getDestination() ? { latitude: globalContext.getDestination().lat, longitude: globalContext.getDestination().lng } : {}
+    var originCoods = globalContext.getOrigin() ? { latitude: globalContext.getOrigin().lat, longitude: globalContext.getOrigin().lng } : {}
+  }
 
 
-  // getting my current location
-  const locateCurrentPosition = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        console.log(JSON.stringify(position));
 
-        //need to get lat , long of my current location for the initialregion (line 93) below
-        let currentLongitude = JSON.stringify(position.coords.longitude);
-        let currentLatitude = JSON.stringify(position.coords.latitude);
-      //Setting Longitude state
-      setCurrentLongitude(currentLongitude);
-        
-      //Setting Longitude state
-      setCurrentLatitude(currentLatitude);
-  
-      },
-      (error) => alert(error.message),
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000,
-      },
-    );
-  };
+  if (!didMount) { return null }
 
   return (
-    <MapView
-      style={{
-        // width:400,
-        // height:600,
-        flex: 1,
-      }}
-   
-      showsUserLocation={true}
-      loadingEnabled={true}
-      initialRegion={{
-        //==============================================================================
-        //should enter the current location latitude and current location longitude
-        //==============================================
-        latitude: 6.987444,
-        longitude: 80.058133,
-        latitudeDelta: 0.07,
-        longitudeDelta: 0.07,
-      }}
-      provider={PROVIDER_GOOGLE}>
-    
 
-      <Marker coordinate={destination} />
-      <MapViewDirections
-        // origin={setCurrentLatitude,setCurrentLongitude}
-        // destination={destination}
-        origin={origin} // refer origin comment 
-        destination={destination}
-        apikey={GOOGLE_MAPS_APIKEY}
-        strokeWidth={3}
-        strokeColor="#0558B4"
-      />
-    </MapView>
+    globalContext.getDestination() ?
+      <Text>Origin: {globalContext.getOrigin() ? `${globalContext.getOrigin().lng} - ${globalContext.getOrigin().lat}` : 'loading'} ''
+          dest: {globalContext.getDestination() ? `${globalContext.getDestination().lng} - ${globalContext.getDestination().lat}` : 'loading'}</Text>
+
+      :
+      <MapView
+        style={{
+          // width:400,
+          // height:600,
+          flex: 1,
+        }}
+
+        showsUserLocation={true}
+        loadingEnabled={true}
+        initialRegion={{
+          //==============================================================================
+          //should enter the current location latitude and current location longitude
+          //==============================================
+          latitude: globalContext.getOrigin().lat || 0.0,
+          longitude: globalContext.getDestination().lng || 0.0,
+          latitudeDelta: 0.07,
+          longitudeDelta: 0.07,
+        }}
+        provider={PROVIDER_GOOGLE}>
+
+
+        <Marker coordinate={destCoods} />
+        <MapViewDirections
+          // origin={setCurrentLatitude,setCurrentLongitude}
+          // destination={destination}
+          origin={originCoods} // refer origin comment 
+          destination={destCoods}
+          apikey={GOOGLE_MAPS_APIKEY}
+          strokeWidth={3}
+          strokeColor="#0558B4"
+        />
+      </MapView>
   );
 }

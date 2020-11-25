@@ -1,23 +1,24 @@
 import React from 'react';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import LocationContext from './global-context';
+import { getGeoLocation, getManeuvers, } from '../locationService'
 
-export default GlobalState = ({children}) => {
+export default GlobalState = ({ children }) => {
   const [locations, setLocations] = useState({
   });
-  
-  const setOrigin = (originName) => {
-    let locationsTemp = {...locations}
-    locationsTemp.origin = {
-      lat: 23, // this is a placeholder. use google api to retrive matching lats and lngs and set these
-      lng: 233,
-      name: originName,
-    }
+
+  const setOrigin = async (originName) => {
+    let locationsTemp = { ...locations }
+    // {
+    //   lat: 23, // this is a placeholder. use google api to retrive matching lats and lngs and set these
+    //   lng: 233,
+    //   name: originName,
+    // }
     setLocations(locationsTemp);
   };
 
   const setOriginByCoordinates = (position) => {
-    let locationsTemp = {...locations}
+    let locationsTemp = { ...locations }
     locationsTemp.origin = {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
@@ -26,14 +27,18 @@ export default GlobalState = ({children}) => {
     setLocations(locationsTemp);
   }
 
-  const setDestination = (destinationName) => {
-    let locationsTemp = {...locations}
-    locationsTemp.destination = {
-      lat: 23, // this is a placeholder. use google api to retrive matching lats and lngs and set these
-      lng: 233,
-      name: destinationName,
-    }
-    setLocations(locationsTemp);
+  const setDestination = async (destinationName) => {
+    let locationsTemp = { ...locations }
+    console.log(destinationName)
+    getGeoLocation(destinationName, (location) => {
+      console.info(location)
+      locationsTemp.destination = {
+        lat: location.lat, // this is a placeholder. use google api to retrive matching lats and lngs and set these
+        lng: location.lng,
+        name: destinationName,
+      }
+      setLocations(locationsTemp);
+    });
   };
 
   const getOrigin = () => {
