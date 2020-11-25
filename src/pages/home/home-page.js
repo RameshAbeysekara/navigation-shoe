@@ -3,9 +3,7 @@ import {Text, View} from 'react-native';
 import {TextInput} from 'react-native';
 import {Button} from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import { CommonActions } from '@react-navigation/native';
 import {useState, useContext, useEffect} from 'react';
-import { getGeoLocation, getManeuvers, listenToLocationChange } from '../../../locationService';
 import GlobalContext from '../../context/global-context';
 import { 
   requestLocationPermission,
@@ -30,22 +28,12 @@ export function HomeScreen( {Map}) {
       return (
         <>
         <Text>Origin: {globalContext.getOrigin() ? `${globalContext.getOrigin().lng} - ${globalContext.getOrigin().lat}` : 'loading'}</Text>
+        <Text>Origin: {globalContext.getOrigin() ? `${JSON.stringify(globalContext.getOrigin())}` : 'loading'}</Text>
         <Text>Destination: {globalContext.getDestination() ? globalContext.getDestination().name: 'loading'}</Text>
         </>
       )
     }
   }
-  
-  //=====need to enter user entered destination value ==================================================================================================
-  let geoPoint = getGeoLocation('sri Lnka');
-
-   //====={ orgin (my current location )}========{destination }=======================
-  let manuevers = getManeuvers({ lat: 37.7699298, lng: -122.4469157 }, { lat: 37.7683909618184, lng: -122.51089453697205 });
-  
-// updating d=current locations
-  listenToLocationChange((data) => {
-    // setLocation(data)
-  })
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -62,7 +50,8 @@ export function HomeScreen( {Map}) {
           style={{
             height: 40,
           }}
-          placeholder="My current Location"
+          value={globalContext.getOrigin() ? globalContext.getOrigin().locName : 'Loading'}
+          editable={false}
         />
       </View>
 
@@ -103,9 +92,3 @@ export function HomeScreen( {Map}) {
 
   const styles = StyleSheet.cre;
 }
-
-// function HomeScreen  ()  {
-//   return <Text>Hello, I am your cat!</Text>;
-// };
-
-// export default HomeScreen;

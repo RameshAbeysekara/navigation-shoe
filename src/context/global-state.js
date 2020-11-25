@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
 import LocationContext from './global-context';
+import { getLocationName } from '../../locationService';
 
 export default GlobalState = ({children}) => {
   const [locations, setLocations] = useState({
@@ -11,17 +12,20 @@ export default GlobalState = ({children}) => {
     locationsTemp.origin = {
       lat: 23, // this is a placeholder. use google api to retrive matching lats and lngs and set these
       lng: 233,
-      name: originName,
+      locName: originName,
     }
     setLocations(locationsTemp);
   };
 
-  const setOriginByCoordinates = (position) => {
+  const setOriginByCoordinates = async (position) => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude; 
+    const locName = await getLocationName(lat, lng);
     let locationsTemp = {...locations}
     locationsTemp.origin = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-      name: "Dummy Name", // call gmaps and retried a name
+      lat,
+      lng,
+      locName,
     }
     setLocations(locationsTemp);
   }
@@ -31,7 +35,7 @@ export default GlobalState = ({children}) => {
     locationsTemp.destination = {
       lat: 23, // this is a placeholder. use google api to retrive matching lats and lngs and set these
       lng: 233,
-      name: destinationName,
+      locName: destinationName,
     }
     setLocations(locationsTemp);
   };
