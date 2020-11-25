@@ -1,7 +1,7 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
 import LocationContext from './global-context';
-import { getLocationName } from '../../locationService';
+import { getLocationName, getGeoLocation } from '../../locationService';
 
 export default GlobalState = ({children}) => {
   const [locations, setLocations] = useState({
@@ -30,11 +30,12 @@ export default GlobalState = ({children}) => {
     setLocations(locationsTemp);
   }
 
-  const setDestination = (destinationName) => {
+  const setDestination = async (destinationName) => {
+    const coords = getGeoLocation(destinationName);
     let locationsTemp = {...locations}
     locationsTemp.destination = {
-      lat: 23, // this is a placeholder. use google api to retrive matching lats and lngs and set these
-      lng: 233,
+      lat: coords.lat,
+      lng: coords.lng,
       locName: destinationName,
     }
     setLocations(locationsTemp);

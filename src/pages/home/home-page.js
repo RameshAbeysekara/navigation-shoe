@@ -14,6 +14,8 @@ export function HomeScreen( {Map}) {
   const navigation = useNavigation();
   const globalContext = useContext(GlobalContext);
 
+  const [destination, setDestination] = useState('');
+
   useEffect(()=> {
     const isGranted = requestLocationPermission(); 
     //Todo: let user know that app needs location permissions and retry.
@@ -21,6 +23,11 @@ export function HomeScreen( {Map}) {
       getCurrentPosition(globalContext.setOriginByCoordinates);
     }
   },[]);
+
+  const navigateToMap = () => {
+    globalContext.setDestination(destination);
+    // navigation.navigate('Map')
+  }
 
   //  this is for testing. replace in production
   const TestLocations = () => {
@@ -69,7 +76,7 @@ export function HomeScreen( {Map}) {
             height: 40,
           }}
           placeholder="Destination"
-          onChangeText={(Val) => globalContext.setDestination(Val) }
+          onChangeText={(Val) => setDestination(Val) }
         />
       </View>
 
@@ -83,7 +90,7 @@ export function HomeScreen( {Map}) {
       <Button
         title="Go "
         color="#0558B4"
-        onPress={() => navigation.navigate('Map')}
+        onPress={() => navigateToMap()}
       />
       </View>
       <TestLocations></TestLocations>
