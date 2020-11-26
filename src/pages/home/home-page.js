@@ -24,9 +24,9 @@ export function HomeScreen( {Map}) {
     }
   },[]);
 
-  const navigateToMap = () => {
-    globalContext.setDestination(destination);
-    // navigation.navigate('Map')
+  const navigateToMap = async () => {
+    await globalContext.setDestination(destination);
+    navigation.navigate('Map')
   }
 
   //  this is for testing. replace in production
@@ -77,6 +77,7 @@ export function HomeScreen( {Map}) {
           }}
           placeholder="Destination"
           onChangeText={(Val) => setDestination(Val) }
+          editable={globalContext.getOrigin() ? true : false}
         />
       </View>
 

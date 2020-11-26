@@ -30,15 +30,22 @@ export default GlobalState = ({children}) => {
     setLocations(locationsTemp);
   }
 
-  const setDestination = async (destinationName) => {
-    const coords = getGeoLocation(destinationName);
-    let locationsTemp = {...locations}
-    locationsTemp.destination = {
-      lat: coords.lat,
-      lng: coords.lng,
-      locName: destinationName,
-    }
-    setLocations(locationsTemp);
+  const setDestination = (destinationName) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const coords = await getGeoLocation(destinationName);
+        let locationsTemp = {...locations}
+        locationsTemp.destination = {
+          lat: coords.lat,
+          lng: coords.lng,
+          locName: destinationName,
+        }
+        setLocations(locationsTemp);
+        resolve();
+      } catch (error) {
+        reject();
+      }
+    })
   };
 
   const getOrigin = () => {
