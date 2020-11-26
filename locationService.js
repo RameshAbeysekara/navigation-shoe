@@ -43,6 +43,18 @@ exports.getManeuvers = async (origin = { lat: 0.0, lng: 0.0 }, destination = { l
     }
 }
 
+exports.getLocationName = async (lat, lng) => {
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+    try {
+        let response = await fetch(apiUrl);
+        let res = await response.json();
+        const locName = res.results[0].formatted_address; 
+        return locName;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 exports.listenToLocationChange = (callback) => {
     Geolocation.watchPosition((position) => {
         console.log(position)
